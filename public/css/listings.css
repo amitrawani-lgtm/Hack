@@ -1,0 +1,39 @@
+.listings {
+     
+}
+.food-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.food-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.2);
+}
+.btn-gradient {
+  background: linear-gradient(135deg, #10B981, #3B82F6);
+  color: white;
+  border: none;
+  transition: all 0.3s ease;
+}
+.btn-gradient:hover {
+  box-shadow: 0 6px 15px rgba(16,185,129,0.5);
+  transform: translateY(-2px);
+}
+
+.food-card .card-footer {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.food-card:hover .card-footer {
+  opacity: 1;
+}
+.food-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.food-card:hover {
+  transform: perspective(1000px) rotateX(5deg) rotateY(-5deg);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+}

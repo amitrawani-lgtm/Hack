@@ -1,0 +1,32 @@
+<% layout("layouts/boilerplate.ejs") %>
+
+<div class="container my-5 listings">
+  <div class="row g-4 justify-content-center">
+    <% for (listing of allListings) { %>
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden food-card">
+          <img src="<%= listing.image %>" class="card-img-top" alt="Food image" style="height: 200px; object-fit: cover;">
+          <div class="card-body d-flex flex-column text-center">
+            <h5 class="card-title fw-bold text-dark"><%= listing.food %></h5>
+            <p class="card-text text-muted small">Donated with care</p>
+          </div>
+          <div class="card-footer bg-white border-0 text-center">
+            <a href="/listing/<%= listing._id %>" class="btn btn-warning fw-bold px-4 py-2 rounded-pill shadow-sm">
+              View Details
+            </a>
+          </div>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<style>
+  .food-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .food-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  }
+</style>

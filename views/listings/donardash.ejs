@@ -1,0 +1,60 @@
+<% layout("layouts/boilerplate.ejs") %>
+
+<div class="container my-4" style="max-width: 900px;">
+  <!-- Header -->
+  <nav class="navbar navbar-light bg-white shadow-sm rounded-3 px-4 mb-4">
+    <a class="navbar-brand fw-bold" style="color: rgb(231, 190, 94);"  href="#">Deshboard</a>
+    <div class="ms-auto d-flex align-items-center gap-3">
+      <span class="fw-semibold text-secondary ">Donor</span>
+      <button class="btn btn-outline-success position-relative">
+        🔔
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+          3
+        </span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Welcome -->
+  <div class="alert shadow-sm rounded-3 custom-box ">
+    <h5 class="mb-1">Hi Alex! 👋</h5>
+    <p class="mb-0 small">Thanks for your generous donations! 🌱</p>
+  </div>
+
+  <!-- Quick Stats -->
+  <div class="row g-4 my-3">
+    <div class="col-md-6">
+      <div class="custom-box text-center">
+        <p class="text-muted small mb-1">Meals Donated</p>
+        <h3 class="fw-bold text-success">152</h3>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="custom-box text-center">
+        <p class="text-muted small mb-1">CO₂ Saved</p>
+        <h3 class="fw-bold text-success">67.5 kg</h3>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Donations -->
+  <div class="custom-box">
+    <div class="fw-bold text-white fw-semibold p-2 rounded-top">
+      Recent Donations
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item d-flex justify-content-between">
+        <span>Surplus food donated at Engineering Block</span>
+        <small class="text-muted">Just now</small>
+      </li>
+      <li class="list-group-item d-flex justify-content-between">
+        <span>Leftover lunch from Hostel Mess</span>
+        <small class="text-muted">2 hrs ago</small>
+      </li>
+      <li class="list-group-item d-flex justify-content-between">
+        <span>Fresh fruits & bread donated</span>
+        <small class="text-muted">Yesterday</small>
+      </li>
+    </ul>
+  </div>
+</div>
