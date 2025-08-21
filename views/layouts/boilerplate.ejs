@@ -5,6 +5,8 @@
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="/css/listings.css">
     <link rel="stylesheet" href="/css/dash.css">
+    <link rel="stylesheet" href="/css/Ddetail.css">
+    <link rel="stylesheet" href="/css/donarlist.css">
     <link
       rel="stylesheet"
       as="style"
@@ -19,6 +21,7 @@
     />
     <title>Stitch Design</title>
     <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   </head>
@@ -26,6 +29,7 @@
      <div class="relative flex size-full min-h-screen flex-col bg-white group/design-root overflow-x-hidden" style='font-family: "Plus Jakarta Sans", "Noto Sans", sans-serif;'>
       <div class="layout-container flex h-full grow flex-col">
        <%- include("../includes/navbar.ejs")  %>
+       <%- include("../includes/alert.ejs")  %>
         <%- body  %>
         <%- include("../includes/footer.ejs")  %>
       </div>
