@@ -1,0 +1,65 @@
+<% layout("layouts/boilerplate.ejs") %>
+<body>
+    <div class="row">
+        <div class="col-8 offset-2">
+            <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h2>Donor Details</h2>
+      <p class="sub-text">Fill in the details to list your donation 🍲</p>
+    </div>
+
+    <!-- Donor Form -->
+    <form class="donor-form" method="post" action="/donate/<%=user.id%>">
+      <div class="form-group">
+        <label for="foodType">Food Type</label>
+        <input type="text" id="foodType" placeholder="e.g., Rice, Roti, Fruits" name="donar[food]">
+      </div>
+
+      <div class="form-group">
+        <label for="quantity">Quantity (meals / person)</label>
+        <input type="number" id="quantity" placeholder="e.g., 20" name="donar[quantity]">
+      </div>
+
+      <div class="form-group">
+        <label for="freshness">Freshness Status</label>
+        <select id="freshness" name="donar[freshness]">
+          <option>Freshly Cooked</option>
+          <option>Leftover (Same Day)</option>
+          <option>Packaged Food</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="expiry">Safe to Eat (Hours)</label>
+        <input type="number" id="expiry" placeholder="e.g., 6" name="donar[safehrs]">
+      </div>
+
+      <div class="form-group">
+        <label for="pickupLocation">Pickup Location</label>
+        <input type="text" id="pickupLocation" placeholder="e.g., Hostel Mess, Block A" name="donar[location]">
+      </div>
+
+      <div class="form-group">
+        <label for="availability">Availability Window</label>
+        <input type="text" id="availability" placeholder="e.g., 6:00 PM - 9:00 PM" name="donar[availablity]">
+      </div>
+       
+      <div class="form-group">
+        <label for="availability">image</label>
+        <input type="text" id="availability" placeholder="url" name="donar[image]">
+      </div>
+
+      <!-- <label for="photo">Upload Food Photo</label>
+       <div class="upload-box" onclick="document.getElementById('photo').click()">
+        <span>📷 Click to upload food photo</span>
+       <input type="file" id="photo" accept="image/*" name="donar[image]">
+       </div> -->
+
+      <button type="submit" class="submit-btn">Submit Donation</button>
+    </form>
+  </div>
+        </div>
+    </div>
+</body>
+

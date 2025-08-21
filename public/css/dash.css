@@ -1,11 +1,5 @@
+
 .custom-box {
-    background-color: #ff8177;
-    background-image: linear-gradient(to top,#B1F0F7 0%,#437bcf 100%);
-    background-size: 100%;
-    -webkit-background-clip: text;
-    -moz-background-clip: text;
-    /* -webkit-text-fill-color: transparent;
-    -moz-text-fill-color: transparent; */
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
@@ -16,4 +10,17 @@
 .custom-box:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+}
+.addList{
+   display: flex;
+   margin-bottom: 20px;
+   justify-content: center;
+}
+.thanks{
+   background-color: rgb(251, 233, 213);
+}
+.listbtn{
+   width: 80vh;
+   border: solid black;
+   background-color: rgb(157, 242, 214);
 }
