@@ -1,0 +1,48 @@
+.login-background-wrapper {
+  position: relative;
+  min-height: 100vh;
+  background-color: #f4ede3; /* soft warm beige base */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  overflow: hidden;
+}
+
+/* Large blurred gradient blob on left side */
+.login-background-wrapper::before {
+  content: "";
+  position: absolute;
+  top: -150px;
+  left: -150px;
+  width: 440px;
+  height: 440px;
+  background: linear-gradient(220deg, #ff9f0f 0%, #f97316 40%, #3b82f6 90%);
+  filter: blur(140px);
+  border-radius: 50%;
+  opacity: 0.75;
+  z-index: 0;
+  transform: scale(1.1);
+  pointer-events: none;
+}
+
+/* Optional subtle texture/vignette overlay */
+.login-background-wrapper::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.05) 80%);
+  mix-blend-mode: multiply;
+  z-index: 1;
+  opacity: 0.12;
+  pointer-events: none;
+  border-radius: 2rem;
+}
+
+/* Ensure your existing form container layers above */
+.login-background-wrapper > .container {
+  position: relative;
+  z-index: 10;
+}

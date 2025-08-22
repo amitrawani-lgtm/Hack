@@ -1,0 +1,154 @@
+/* Signup page container and layout */
+.signup-container {
+  max-width: 400px;
+  width: 100%;
+  background-color: #fff; /* white card */
+  padding: 2rem; /* 32px */
+  border-radius: 1rem;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+  animation: fadeIn 0.5s ease forwards;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Center the signup form in viewport */
+.signup-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fafafa;
+  padding: 1rem;
+}
+
+/* Animate fadeIn keyframes */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Headings (h1) */
+.signup-container h1 {
+  font-family: 'Plus Jakarta Sans', 'Noto Sans', sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem; /* 24px */
+  line-height: 1.2;
+  color: #181611; /* primary text */
+  text-align: center;
+  margin-bottom: 1rem;
+  letter-spacing: -0.015em;
+}
+
+/* Paragraph */
+.signup-container p {
+  font-family: 'Noto Sans', sans-serif;
+  font-weight: 400;
+  font-size: 0.875rem; /* 14px */
+  color: #8a8060; /* muted text */
+  text-align: center;
+  margin-bottom: 1.5rem;
+  line-height: 1.4;
+}
+
+/* Form labels */
+.signup-container label {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #181611;
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+/* Form inputs */
+.signup-container input[type="text"],
+.signup-container input[type="email"],
+.signup-container input[type="password"] {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: 1px solid #e6e3db;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-family: 'Plus Jakarta Sans', 'Noto Sans', sans-serif;
+  color: #181611;
+  margin-bottom: 1.5rem;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.signup-container input[type="text"]:focus,
+.signup-container input[type="email"]:focus,
+.signup-container input[type="password"]:focus {
+  border-color: #f4c025;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(244, 192, 37, 0.3);
+}
+
+/* Submit button */
+.signup-container button[type="submit"] {
+  width: 100%;
+  background-color: #f4c025;
+  color: #181611;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 0.5rem 0;
+  border: none;
+  border-radius: 0.5rem;
+  letter-spacing: 0.015em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-transform: uppercase;
+}
+
+.signup-container button[type="submit"]:hover,
+.signup-container button[type="submit"]:focus {
+  background-color: #d9a81f;
+  outline: none;
+}
+
+/* Link below form */
+.signup-container .text-center a {
+  color: #181611;
+  font-weight: 600;
+  text-decoration: none;
+  transition: text-decoration 0.3s ease;
+}
+
+.signup-container .text-center a:hover,
+.signup-container .text-center a:focus {
+  text-decoration: underline;
+  outline: none;
+}
+
+/* Responsive adjustments */
+@media (min-width: 480px) {
+  .signup-container {
+    padding: 3rem;
+  }
+
+  .signup-container h1 {
+    font-size: 2rem; /* 32px */
+  }
+
+  .signup-container p {
+    font-size: 1rem;
+  }
+
+  .signup-container input[type="text"],
+  .signup-container input[type="email"],
+  .signup-container input[type="password"] {
+    font-size: 1.125rem; /* 18px */
+    padding: 0.75rem 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .signup-container button[type="submit"] {
+    padding: 0.75rem 0;
+    font-size: 1.125rem; /* 18px */
+  }
+}
