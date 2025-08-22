@@ -25,8 +25,8 @@
           <div class="flex items-center gap-9">
             <a
               class="text-[#181611] text-sm font-medium leading-normal"
-              href="#"
-              >About</a
+              href="/"
+              >Home</a
             >
             <a
               class="text-[#181611] text-sm font-medium leading-normal"
@@ -41,8 +41,14 @@
             <a
               class="text-[#181611] text-sm font-medium leading-normal"
               href="#"
-              >Get Involved</a
+              >About</a
             >
+            
+            <% if (currUser && currUser.role === "donar") { %>
+             <a href="/leaderboard" class="text-decoration-none fw-bold text-warning">
+            🏆 Leaderboard
+             </a>
+            <% } %>
           </div>
           <!-- <div class="flex gap-2">
             <button

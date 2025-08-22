@@ -8,10 +8,22 @@
           <img src="<%= listing.image %>" class="card-img-top" alt="Food image" style="height: 200px; object-fit: cover;">
           <div class="card-body d-flex flex-column text-center">
             <h5 class="card-title fw-bold text-dark"><%= listing.food %></h5>
-            <p class="card-text text-muted small">Donated with care</p>
+            <p class="card-text text-muted small">📍 <%= listing.location %></p>
+
+            <!-- ✅ Show status dynamically -->
+            <p class="mt-2">
+              <% if (listing.status === "Available") { %>
+                <span class="badge bg-success">Available</span>
+              <% } else if (listing.status === "Picked Up") { %>
+                <span class="badge bg-warning text-dark">picked Up</span>
+              <% } else if (listing.status === "Expired") { %>
+                <span class="badge bg-danger">Expired</span>
+              <% } %>
+            </p>
           </div>
+
           <div class="card-footer bg-white border-0 text-center">
-            <a href="/listing/<%= listing._id %>" class="btn btn-warning fw-bold px-4 py-2 rounded-pill shadow-sm">
+            <a href="/listings/<%= listing._id %>" class="btn btn-warning fw-bold px-4 py-2 rounded-pill shadow-sm">
               View Details
             </a>
           </div>

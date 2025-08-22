@@ -10,6 +10,9 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
 const flash = require("connect-flash");
+const {getCoordinates} = require("./middleware.js");
+const Notification = require("./models/notification");
+const {autoExpireListings} = require("./middleware.js");
 
 const sessionOption = {
   secret: "mysupersecretcode",
@@ -78,25 +81,35 @@ app.get("/signup",(req,res)=>{
 
 app.post("/signup", async (req, res, next) => {
   try {
-    let user = req.body.user;
+    let userData = req.body.user;
+    console.log(userData);
+
+    // ✅ Get coordinates from location string
+    const coordinate = await getCoordinates(userData.location);
+    console.log(coordinate);
+
     let newUser = new User({
-      username: user.username,
-      email: user.email,
-      role: user.role,
+      username: userData.username,
+      email: userData.email,
+      location: userData.location,
+      role: userData.role,
+      geometry: coordinate   // save as GeoJSON
     });
 
-    let saveUser = await User.register(newUser, user.password);
+    let saveUser = await User.register(newUser, userData.password);
 
     // ✅ log in user immediately after signup
     req.login(saveUser, (err) => {
       if (err) return next(err);
-      res.redirect("/welcome");   // 👉 go to welcome page route
+      res.redirect("/welcome");
     });
   } catch (e) {
+    console.error(e);
     req.flash("error", e.message);
     res.redirect("/signup");
   }
 });
+
 
 app.get("/welcome", (req, res) => {
   if (!req.user) {
@@ -130,10 +143,31 @@ app.post("/login",passport.authenticate("local",{
    })
 
 
-app.get("/listings", async(req,res)=>{
-   let allListings = await Listing.find();
-   res.render("listings/listing.ejs",{allListings});
-})
+app.get("/listings", async (req, res) => {
+    try {
+        // Ensure user is logged in
+        if (!req.user) {
+            req.flash("error", "You need to login first!");
+            return res.redirect("/login");
+        }
+
+        let filter = {};
+
+        // If the user is a volunteer, filter by their location
+        if (req.user.role === "volunteer" && req.user.location) {
+            filter.location = req.user.location;
+        }
+
+        // Fetch listings based on filter
+        let allListings = await Listing.find(filter);
+
+        res.render("listings/listing.ejs", { allListings });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Something went wrong");
+    }
+});
+
 
 
 app.post("/listing", async(req,res)=>{
@@ -144,11 +178,89 @@ app.post("/listing", async(req,res)=>{
    res.redirect("/listings");
 })
 
-app.get("/dashboard/:id", async(req,res)=>{
-    let {id} = req.params;
-    let donar = await User.findById(id);
-    res.render("listings/donardash.ejs",{donar, currUser: req.user});
-})
+app.get("/listings/:id", async (req, res) => {
+    try {
+        await autoExpireListings();
+        let { id } = req.params;
+        let listing = await Listing.findById(id);
+
+        if (!listing) {
+            req.flash("error", "Listing not found!");
+            return res.redirect("/listings");
+        }
+
+        res.render("listings/show.ejs", { listing });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Something went wrong");
+    }
+});
+
+// Mark listing as Picked Up
+app.post("/listings/:id/pickup", async (req, res) => {
+    try {
+        let { id } = req.params;
+        let listing = await Listing.findById(id);
+
+        if (!listing) {
+            req.flash("error", "Listing not found!");
+            return res.redirect("/listings");
+        }
+
+        // ✅ Update status
+        listing.status = "Picked Up";
+        await listing.save();
+
+        req.flash("success", "You have picked up this donation!");
+        res.redirect(`/listings/${id}`);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Something went wrong");
+    }
+});
+
+
+
+app.get("/dashboard/:id", async (req, res) => {
+  let { id } = req.params;
+  let user = await User.findById(id);
+
+  let notifications = [];
+  let donorListings = [];
+  let totalMeals = 0;
+  let totalCO2 = 0;
+
+  if (user.role === "volunteer") {
+    notifications = await Notification.find({ recipient: user._id }).sort({ createdAt: -1 });
+     let deliveredListings = await Listing.find({  
+    volunteer: user._id, 
+    status: { $in: ["picked Up"] } 
+  })
+
+    totalMeals = deliveredListings.reduce((sum, l) => sum + (l.quantity || 0), 0);
+    totalCO2 = totalMeals * 2.5; 
+  }
+
+  if (user.role === "donar") {
+    donorListings = await Listing.find({ owner: user._id }).sort({ createdAt: -1 });
+
+    // calculate stats
+    totalMeals = donorListings.reduce((sum, l) => sum + (l.quantity || 0), 0);
+    totalCO2 = totalMeals * 2.5; 
+  }
+
+  res.render("listings/donardash.ejs", { 
+    donar: user, 
+    currUser: req.user, 
+    notifications,
+    donorListings,
+    totalMeals,
+    totalCO2
+  });
+});
+
+
+
 
 app.get("/donate/:id",async (req,res)=>{
    let {id} = req.params;
@@ -156,24 +268,110 @@ app.get("/donate/:id",async (req,res)=>{
    res.render("listings/donar/details.ejs",{user});
 });
 
-app.post("/donate/:id",async(req,res)=>{
-   let {id} = req.params;
-    let newList = await Listing(req.body.donar);
-    console.log(req.body.donar);
-    console.log(newList);
+
+
+app.post("/donate/:id", async (req,res) => {
+  try {
+    const coordinate = await getCoordinates(req.body.donar.location);
+    let { id } = req.params;
+
+    let newList = new Listing(req.body.donar);
     let user = await User.findById(id);
+
     newList.owner = user._id;
+    newList.geometry = coordinate;
+
     let saveList = await newList.save();
-    console.log(saveList);
+    console.log("Donation saved:", saveList);
+
+    // ✅ Find volunteers within 5km
+    const volunteers = await User.find({
+      role: "volunteer",
+      geometry: {
+        $near: {
+          $geometry: { type: "Point", coordinates: coordinate.coordinates },
+          $maxDistance: 5000 // 5km radius
+        }
+      }
+    });
+
+    console.log("Nearby Volunteers:", volunteers);
+
+    for (let v of volunteers) {
+    await Notification.create({
+    recipient: v._id,
+    message: `${user.username} donated ${newList.food} at ${newList.location}`,
+    listing: newList._id
+  });
+    }
+
+    // ✅ Here you can trigger notifications (email or in-app)
+    // volunteers.forEach(v => sendEmail(v.email, user.username, newList.food, newList.location));
+
+    req.flash("success", "Donation listed successfully, volunteers notified!");
     res.redirect(`/donate/${newList.owner._id}/lists`);
-})
 
-app.get("/donate/:id/lists", async(req,res)=>{
-    let {id}  = req.params;
-     let donarListings = await Listing.find({ owner: id }).populate("owner");
-     res.render("listings/donar/list.ejs",{donarListings});
+  } catch (err) {
+    console.error(err);
+    req.flash("error", "Something went wrong while adding donation.");
+    res.redirect(`/donate/${req.params.id}`);
+  }
+});
 
-})
+
+app.get("/donate/:id/lists", async (req, res) => {
+    let { id } = req.params;
+    let donarListings = await Listing.find({ owner: id }).populate("owner");
+
+    // Calculate time left for each listing
+    const now = new Date();
+    donarListings = donarListings.map(list => {
+        if (list.expiresAt) {
+            const diffMs = list.expiresAt - now;
+            if (diffMs > 0) {
+                const hours = Math.floor(diffMs / (1000 * 60 * 60));
+                const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+                list.timeLeft = `${hours}h ${minutes}m left`;
+            } else {
+                list.timeLeft = "Expired";
+                list.status = "Expired"; // Auto mark expired
+            }
+        }
+        return list;
+    });
+
+    res.render("listings/donar/list.ejs", { donarListings });
+});
+
+app.get("/leaderboard", async (req, res) => {
+  // Fetch donors only
+  let donors = await User.find({ role: "donar" });
+
+  // For each donor, calculate meals donated
+  let donorStats = [];
+  for (let donor of donors) {
+    let listings = await Listing.find({ owner: donor._id, status: { $in: ["Available", "Picked Up"] } });
+    let totalMeals = listings.reduce((sum, l) => sum + (l.quantity || 0), 0);
+
+    // Assign badge 🎖️
+    let badge = "🌱 Starter";
+    if (totalMeals >= 100) badge = "🥇 Gold Donor";
+    else if (totalMeals >= 50) badge = "🥈 Silver Donor";
+    else if (totalMeals >= 20) badge = "🥉 Bronze Donor";
+
+    donorStats.push({
+      username: donor.username,
+      totalMeals,
+      badge
+    });
+  }
+
+  // Sort donors by meals donated (highest first)
+  donorStats.sort((a, b) => b.totalMeals - a.totalMeals);
+
+  res.render("listings/leaderboard.ejs", { donorStats });
+});
+
 
 
 app.listen(8080, () => {
