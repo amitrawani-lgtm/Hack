@@ -160,6 +160,7 @@ app.get("/listings", async (req, res) => {
 
         // Fetch listings based on filter
         let allListings = await Listing.find(filter);
+        console.log(allListings);
 
         res.render("listings/listing.ejs", { allListings });
     } catch (err) {
