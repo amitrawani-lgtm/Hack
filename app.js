@@ -167,7 +167,9 @@ app.get("/listings", async (req, res) => {
 });
 
 
-
+app.get("/cnh",(req,res)=>{
+    res.render("listings/cnh.ejs");
+})
 
 app.post("/listing", async(req,res)=>{
    // console.log(req.body)
