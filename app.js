@@ -91,7 +91,7 @@ app.post("/signup", async (req, res, next) => {
     let newUser = new User({
       username: userData.username,
       email: userData.email,
-      location: userData.location,
+      location: userData.location.toUpperCase().trim(),
       role: userData.role,
       geometry: coordinate   // save as GeoJSON
     });
@@ -153,20 +153,19 @@ app.get("/listings", async (req, res) => {
 
         let filter = {};
 
-        // If the user is a volunteer, filter by their location
         if (req.user.role === "volunteer" && req.user.location) {
             filter.location = req.user.location;
         }
 
-        // Fetch listings based on filter
-        let allListings = await Listing.find(filter);
-
+        const allListings = await Listing.find(filter);
+        console.log("Listings found:", allListings);     //printing all listing that matches
         res.render("listings/listing.ejs", { allListings });
     } catch (err) {
         console.error(err);
         res.status(500).send("Something went wrong");
     }
 });
+
 
 
 
@@ -276,6 +275,7 @@ app.post("/donate/:id", async (req,res) => {
     let { id } = req.params;
 
     let newList = new Listing(req.body.donar);
+    location: req.body.donar.location.toUpperCase().trim();
     let user = await User.findById(id);
 
     newList.owner = user._id;
