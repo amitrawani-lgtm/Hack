@@ -1,0 +1,44 @@
+<% layout("layouts/boilerplate.ejs") %>
+
+  
+  <body>
+    <div
+      class="relative flex size-full min-h-screen flex-col bg-[#fcf9f8] group/design-root overflow-x-hidden"
+      style='font-family: "Plus Jakarta Sans", "Noto Sans", sans-serif;'
+    >
+      <div class="layout-container flex h-full grow flex-col">
+        <div class="px-40 flex flex-1 justify-center py-5">
+          <div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+            <h2
+              class="text-[#1c120d] tracking-light text-[28px] font-bold leading-tight px-4 text-center pb-3 pt-5"
+            >
+              Organization donating:
+            </h2>
+            <p
+              class="text-[#1c120d] text-base font-normal leading-normal pb-3 pt-1 px-4 text-center"
+            >
+              Choose your role to continue
+            </p>
+            <div class="grid grid-cols-[repeat(auto-fit,minmax(158px,1fr))] gap-3 p-4">
+              <div
+                class="bg-cover bg-center flex flex-col gap-3 rounded-xl justify-end p-4 aspect-video"
+                style='background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%, rgba(0, 0, 0, 0.1) 100%, rgba(0, 0, 0, 0) 100%), url("https://images.unsplash.com/photo-1600891964599-f61ba0e24092?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80");'
+              >
+                <p class="text-white text-base font-bold leading-tight w-4/5 line-clamp-2">
+                  Canteen
+                </p>
+              </div>
+              <div
+                class="bg-cover bg-center flex flex-col gap-3 rounded-xl justify-end p-4 aspect-video"
+                style='background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%, rgba(0, 0, 0, 0.1) 100%, rgba(0, 0, 0, 0) 100%), url("https://images.unsplash.com/photo-1504384308090-c894fdcc538d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80");'
+              >
+                <p class="text-white text-base font-bold leading-tight w-4/5 line-clamp-2">
+                  Others
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
