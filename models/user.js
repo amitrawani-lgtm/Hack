@@ -11,9 +11,26 @@ const userSchema = new Schema({
         type: String,
         enum: ["donar", "volunteer"],  // restrict to only these values
         required: true
+    },
+    location:{
+        type : String,
+    },
+    geometry: {
+    type: {
+      type: String,
+      enum: ["Point"], // GeoJSON type must be Point
+      required: true,
+    },
+    coordinates: {
+      type: [Number], // [longitude, latitude]
+      required: true,
     }
+   }
+
 });
 
 userSchema.plugin(passportLocalMongoose);
+
+userSchema.index({ geometry: "2dsphere" });
 
 module.exports = mongoose.model("User", userSchema);

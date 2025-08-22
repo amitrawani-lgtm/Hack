@@ -5,13 +5,23 @@
   <nav class="navbar navbar-light bg-white shadow-sm rounded-3 px-4 mb-4 dashbar">
     <a class="navbar-brand fw-bold" style="color: rgb(231, 190, 94);"  href="#">Dashboard</a>
     <div class="ms-auto d-flex align-items-center gap-3">
+      <% if (currUser && currUser.role === "donar") { %>
       <a href="/donate/<%= donar.id %>/lists"><button class="btn btn-outline-success">My Donations</button></a>
+      <% } %>
+
+      <% if (currUser && currUser.role === "volunteer") { %>
+      <a href="/listings"><button class="btn btn-outline-success">All Donations</button></a>
+      <% } %>
+
       <button class="btn btn-outline-secondary position-relative">
         🔔
-        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-          3
-        </span>
+        <% if (notifications && notifications.length > 0) { %>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            <%= notifications.filter(n => !n.isRead).length %>
+          </span>
+        <% } %>
       </button>
+
     </div>
   </nav>
 
@@ -28,13 +38,13 @@
     <div class="col-md-6">
       <div class="custom-box text-center">
         <p class="text-muted small mb-1 fw-bold">Meals Donated</p>
-        <h3 class="fw-bold text-success fw-bold">152</h3>
+        <h3 class="fw-bold text-success fw-bold"><%= totalMeals %></h3>
       </div>
     </div>
     <div class="col-md-6">
       <div class="custom-box text-center">
         <p class="text-muted small mb-1 fw-bold">CO₂ Saved</p>
-        <h3 class="fw-bold text-success fw-bold">67.5 kg</h3>
+        <h3 class="fw-bold text-success fw-bold"><%= totalCO2.toFixed(1) %> kg</h3>
       </div>
     </div>
   </div>
@@ -47,26 +57,56 @@
       </button>
     </a>
   </div>
-<% } %>
+  <% } %>
 
   <!-- Recent Donations -->
-  <div class="custom-box">
+<!-- Recent Donations -->
+<div class="custom-box">
+  <% if (currUser && currUser.role === "donar") { %>
     <div class="fw-bold fw-semibold p-2 rounded-top">
       Recent Donations
     </div>
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item d-flex justify-content-between">
-        <span>Surplus food donated at Engineering Block</span>
-        <small class="text-muted">Just now</small>
-      </li>
-      <li class="list-group-item d-flex justify-content-between">
-        <span>Leftover lunch from Hostel Mess</span>
-        <small class="text-muted">2 hrs ago</small>
-      </li>
-      <li class="list-group-item d-flex justify-content-between">
-        <span>Fresh fruits & bread donated</span>
-        <small class="text-muted">Yesterday</small>
-      </li>
-    </ul>
-  </div>
+    <% if (donorListings.length === 0) { %>
+      <p class="text-muted small p-3">No donations yet. List your first food donation! 🌱</p>
+    <% } else { %>
+      <ul class="list-group list-group-flush">
+        <% donorListings.forEach(listing => { %>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <strong><%= listing.food %></strong>
+              <br>
+              <small class="text-muted"><%= listing.location %></small>
+            </div>
+            <div>
+              <% if (listing.status === "Available") { %>
+                <span class="badge bg-success">Available</span>
+              <% } else if (listing.status === "Picked Up") { %>
+                <span class="badge bg-warning text-dark">Picked Up</span>
+              <% } else { %>
+                <span class="badge bg-secondary">Expired</span>
+              <% } %>
+            </div>
+          </li>
+        <% }) %>
+      </ul>
+    <% } %>
+  <% } else if (currUser && currUser.role === "volunteer") { %>
+    <div class="fw-bold fw-semibold p-2 rounded-top">
+      Notifications
+    </div>
+    <% if (notifications.length === 0) { %>
+      <p class="text-muted small p-3">No notifications yet. Check back later! 🔔</p>
+    <% } else { %>
+      <ul class="list-group list-group-flush">
+        <% notifications.forEach(note => { %>
+          <li class="list-group-item">
+            <%= note.message %>
+            <br>
+            <small class="text-muted"><%= note.createdAt.toDateString() %></small>
+          </li>
+        <% }) %>
+      </ul>
+    <% } %>
+  <% } %>
 </div>
+

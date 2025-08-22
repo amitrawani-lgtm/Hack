@@ -1,0 +1,24 @@
+<% layout("layouts/boilerplate.ejs") %>
+
+<div class="container my-5" style="max-width: 800px;">
+  <h2 class="text-center fw-bold mb-4" style="color: rgb(231, 190, 94);">🏆 Donor Leaderboard</h2>
+
+  <% if (donorStats.length === 0) { %>
+    <p class="text-muted text-center">No donations yet 🌱</p>
+  <% } else { %>
+    <ul class="list-group shadow-sm rounded-3">
+      <% donorStats.forEach((donor, index) => { %>
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <span class="fw-bold"><%= index + 1 %>. <%= donor.username %></span>
+            <br>
+            <small class="text-muted">Meals Donated: <%= donor.totalMeals %></small>
+          </div>
+          <div class="fw-bold">
+            <%= donor.badge %>
+          </div>
+        </li>
+      <% }) %>
+    </ul>
+  <% } %>
+</div>
